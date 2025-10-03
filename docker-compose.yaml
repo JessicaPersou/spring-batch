@@ -1,0 +1,11 @@
+services:
+  postgres:
+    image: 'postgres:15'
+    container_name: spring-batch
+    environment:
+      POSTGRES_DB: db
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_ROOT_PASSWORD: root
+    ports:
+      - '5432:5432'
