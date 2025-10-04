@@ -1,7 +1,6 @@
 package com.persou.springbatch.config;
 
 import com.persou.springbatch.entities.Employee;
-import com.persou.springbatch.processor.EmployeeProcessor;
 import javax.sql.DataSource;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -59,7 +58,7 @@ public class BatchConfiguration {
     public ItemWriter<Employee> itemWriter(DataSource dataSource) {
         return new JdbcBatchItemWriterBuilder<Employee>()
             .dataSource(dataSource)
-            .sql("INSERT INTO employees (employee_code, document, full_name, department) VALUES (:employeeCode, :document, :fullName, :department)")
+            .sql("INSERT INTO employees (employee_code, document, full_name, department, created_at) VALUES (:employeeCode, :document, :fullName, :department, :createdAt)")
             .beanMapped()
             .build();
     }
