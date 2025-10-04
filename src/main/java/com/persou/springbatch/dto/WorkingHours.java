@@ -1,4 +1,4 @@
-package com.persou.springbatch.entities;
+package com.persou.springbatch.dto;
 
 
 import java.time.Duration;
