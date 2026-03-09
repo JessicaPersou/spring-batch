@@ -1,7 +1,7 @@
 package com.persou.springbatch.batch.reader;
 
 import com.persou.springbatch.dto.WorkingHours;
-import com.persou.springbatch.dto.WorkingHoursFieldSetMapper;
+import com.persou.springbatch.dto.mapper.WorkingHoursFieldSetMapper;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;

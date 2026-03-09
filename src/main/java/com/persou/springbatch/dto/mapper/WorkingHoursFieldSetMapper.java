@@ -1,5 +1,6 @@
-package com.persou.springbatch.dto;
+package com.persou.springbatch.dto.mapper;
 
+import com.persou.springbatch.dto.WorkingHours;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import org.springframework.batch.item.file.mapping.FieldSetMapper;
