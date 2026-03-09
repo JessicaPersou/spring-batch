@@ -9,14 +9,18 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 
 @Configuration
-public class ReaderConfig {
+public class EmployeeReaderConfig {
 
     @Bean
-    public ItemReader<Employee> itemReader() {
+    public ItemReader<Employee> employeeCsvReader() {
         BeanWrapperFieldSetMapper<Employee> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
         fieldSetMapper.setTargetType(Employee.class);
-        return new FlatFileItemReaderBuilder<Employee>().name("employeeItemReader")
-            .resource(new ClassPathResource("employees.csv")).delimited()
-            .names("EMPLOYEE_CODE", "DOCUMENT", "FULL_NAME", "DEPARTMENT").fieldSetMapper(fieldSetMapper).build();
+        return new FlatFileItemReaderBuilder<Employee>()
+            .name("employeeCsv")
+            .resource(new ClassPathResource("employees.csv"))
+            .delimited()
+            .names("EMPLOYEE_CODE", "DOCUMENT", "FULL_NAME", "DEPARTMENT")
+            .fieldSetMapper(fieldSetMapper)
+            .build();
     }
 }

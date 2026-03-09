@@ -1,7 +1,7 @@
 package com.persou.springbatch.dto;
 
 
-import java.time.Duration;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
@@ -9,7 +9,7 @@ import java.util.Objects;
 public class WorkingHours {
     private Long id;
 
-    private Employee employee;
+    private String employeeCode;
 
     private LocalDate workDate;
 
@@ -17,15 +17,15 @@ public class WorkingHours {
 
     private LocalTime clockOutTime;
 
-    private Duration hoursWorked;
+    private BigDecimal hoursWorked;
 
     public WorkingHours() {
     }
 
-    public WorkingHours(Long id, Employee employee, LocalDate workDate, LocalTime clockInTime, LocalTime clockOutTime,
-                        Duration hoursWorked) {
+    public WorkingHours(Long id, String employeeCode, LocalDate workDate, LocalTime clockInTime, LocalTime clockOutTime,
+                        BigDecimal hoursWorked) {
         this.id = id;
-        this.employee = employee;
+        this.employeeCode = employeeCode;
         this.workDate = workDate;
         this.clockInTime = clockInTime;
         this.clockOutTime = clockOutTime;
@@ -40,12 +40,12 @@ public class WorkingHours {
         this.id = id;
     }
 
-    public Employee getEmployee() {
-        return employee;
+    public String getEmployeeCode() {
+        return employeeCode;
     }
 
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
+    public void setEmployeeCode(String employee) {
+        this.employeeCode = employee;
     }
 
     public LocalDate getWorkDate() {
@@ -72,11 +72,11 @@ public class WorkingHours {
         this.clockOutTime = clockOutTime;
     }
 
-    public Duration getHoursWorked() {
+    public BigDecimal getHoursWorked() {
         return hoursWorked;
     }
 
-    public void setHoursWorked(Duration hoursWorked) {
+    public void setHoursWorked(BigDecimal hoursWorked) {
         this.hoursWorked = hoursWorked;
     }
 
@@ -86,7 +86,7 @@ public class WorkingHours {
             return false;
         }
         WorkingHours that = (WorkingHours) o;
-        return Objects.equals(id, that.id) && Objects.equals(employee, that.employee) &&
+        return Objects.equals(id, that.id) && Objects.equals(employeeCode, that.employeeCode) &&
             Objects.equals(workDate, that.workDate) && Objects.equals(clockInTime, that.clockInTime) &&
             Objects.equals(clockOutTime, that.clockOutTime) &&
             Objects.equals(hoursWorked, that.hoursWorked);
@@ -94,14 +94,14 @@ public class WorkingHours {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, employee, workDate, clockInTime, clockOutTime, hoursWorked);
+        return Objects.hash(id, employeeCode, workDate, clockInTime, clockOutTime, hoursWorked);
     }
 
     @Override
     public String toString() {
         return "WorkingHours{" +
             "id=" + id +
-            ", employee=" + employee +
+            ", employee=" + employeeCode +
             ", workDate=" + workDate +
             ", clockInTime=" + clockInTime +
             ", clockOutTime=" + clockOutTime +
