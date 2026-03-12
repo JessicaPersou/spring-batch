@@ -21,7 +21,7 @@ public class WorkedHoursReaderConfig {
             .resource(new ClassPathResource("working_hours.csv"))
             .linesToSkip(1)
             .delimited()
-            .names("EMPLOYEE_CODE", "WORK_DATE", "CLOCK_IN_TIME", "CLOCK_OUT_TIME")
+            .names("EMPLOYEE_CODE", "WORK_DATE", "CLOCK_IN_TIME", "CLOCK_OUT_TIME", "LUNCH_BREAK_START", "LUNCH_BREAK_END")
             .fieldSetMapper(new WorkingHoursFieldSetMapper())
             .build();
     }

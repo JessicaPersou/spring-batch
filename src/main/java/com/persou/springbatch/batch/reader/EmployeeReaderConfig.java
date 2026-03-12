@@ -19,7 +19,7 @@ public class EmployeeReaderConfig {
             .name("employeeCsv")
             .resource(new ClassPathResource("employees.csv"))
             .delimited()
-            .names("EMPLOYEE_CODE", "DOCUMENT", "FULL_NAME", "DEPARTMENT")
+            .names("employeeCode", "document", "fullName", "department")
             .fieldSetMapper(fieldSetMapper)
             .build();
     }

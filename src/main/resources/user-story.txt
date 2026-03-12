@@ -1,0 +1,222 @@
+PROJETO FICTICIO: FOLHA DE PONTO 360
+
+Objetivo:
+Treinar Spring Batch no seu projeto atual com estorias curtas e progressivas.
+Cada estoria abaixo foi pensada para exercitar um conceito especifico.
+
+--------------------------------------------------------------------
+ESTORIA 01 - IMPORTACAO PARAMETRIZADA DE ARQUIVO
+--------------------------------------------------------------------
+Como analista de RH,
+quero informar o caminho do arquivo de funcionarios na execucao do job,
+para poder importar arquivos diferentes sem recompilar a aplicacao.
+
+Conceitos alvo:
+- JobParameters
+- @StepScope em reader/processor/writer
+- Parameterizacao de chunk size
+
+Criterios de aceite:
+- Job recebe parametro "input.file".
+- Reader usa esse parametro em vez de arquivo fixo no classpath.
+- Job falha com mensagem clara se parametro nao for enviado.
+
+--------------------------------------------------------------------
+ESTORIA 02 - VALIDACAO DE PARAMETROS ANTES DO PROCESSAMENTO
+--------------------------------------------------------------------
+Como operador de batch,
+quero validar os parametros obrigatorios antes de iniciar o job,
+para evitar processamento parcial com configuracao incorreta.
+
+Conceitos alvo:
+- JobParametersValidator
+- Fail fast no inicio da execucao
+
+Criterios de aceite:
+- Validar "input.file" e "reference.date".
+- Validar formato de data (yyyy-MM-dd).
+- Se invalido, job termina com status FAILED antes de ler itens.
+
+--------------------------------------------------------------------
+ESTORIA 03 - TOLERANCIA A FALHAS COM SKIP E RETRY
+--------------------------------------------------------------------
+Como gerente de operacoes,
+quero que o batch continue mesmo com poucos registros problematicos,
+para nao perder a carga inteira por erros pontuais.
+
+Conceitos alvo:
+- faultTolerant()
+- skip(), skipLimit()
+- retry(), retryLimit()
+
+Criterios de aceite:
+- Erro de parse em linha CSV e ignorado com skip.
+- Falha transitoria de banco tenta retry ate limite.
+- Relatorio final mostra quantos itens foram lidos, escritos, pulados e reprocessados.
+
+--------------------------------------------------------------------
+ESTORIA 04 - ARQUIVO DE ERROS (DEAD LETTER)
+--------------------------------------------------------------------
+Como time de suporte,
+quero salvar os registros rejeitados em um arquivo de erro,
+para corrigir e reprocessar sem investigar logs manualmente.
+
+Conceitos alvo:
+- SkipListener
+- ItemWriteListener / ItemProcessListener
+- Escrita de dead-letter CSV
+
+Criterios de aceite:
+- Cada item invalido vai para "error_records.csv" com motivo da falha.
+- Arquivo contem timestamp, etapa e payload original.
+- Falhas do dead-letter nao derrubam o job principal.
+
+--------------------------------------------------------------------
+ESTORIA 05 - RESTART REAL APOS FALHA
+--------------------------------------------------------------------
+Como operador noturno,
+quero reiniciar um job que falhou do ultimo checkpoint,
+para reduzir tempo de reprocessamento.
+
+Conceitos alvo:
+- Restartability
+- ExecutionContext
+- Checkpoint por chunk
+
+Criterios de aceite:
+- Simular falha apos N chunks.
+- Nova execucao com mesmos parametros continua do ponto salvo.
+- Nao duplica dados ja gravados.
+
+--------------------------------------------------------------------
+ESTORIA 06 - ESCRITA IDEMPOTENTE
+--------------------------------------------------------------------
+Como DBA,
+quero garantir que reexecucoes nao criem duplicidade,
+para manter consistencia no banco.
+
+Conceitos alvo:
+- Upsert (INSERT ... ON CONFLICT) ou MERGE
+- Chave natural de negocio
+- Idempotencia em job batch
+
+Criterios de aceite:
+- Reexecutar mesmo arquivo nao aumenta contagem indevidamente.
+- Registros existentes sao atualizados quando necessario.
+- Relatorio informa inseridos vs atualizados.
+
+--------------------------------------------------------------------
+ESTORIA 07 - FLUXO CONDICIONAL COM DECIDER
+--------------------------------------------------------------------
+Como coordenador de RH,
+quero pular o calculo de horas quando nao houver funcionarios validos,
+para economizar recursos.
+
+Conceitos alvo:
+- JobExecutionDecider
+- Fluxo condicional entre steps
+
+Criterios de aceite:
+- Se importacao escrever 0 funcionarios, step de horas e pulado.
+- Status final informa caminho seguido no fluxo.
+- Regra fica clara em logs e monitoramento.
+
+--------------------------------------------------------------------
+ESTORIA 08 - STEP TASKLET DE PRE E POS PROCESSAMENTO
+--------------------------------------------------------------------
+Como auditor de dados,
+quero registrar e mover arquivos processados,
+para manter trilha de auditoria e evitar reprocessamento acidental.
+
+Conceitos alvo:
+- TaskletStep
+- Step antes/depois de steps chunk
+- Operacoes de arquivo
+
+Criterios de aceite:
+- Tasklet inicial valida existencia do arquivo de entrada.
+- Tasklet final move arquivo para pasta "processed/" com timestamp.
+- Em caso de falha no meio, arquivo nao e movido.
+
+--------------------------------------------------------------------
+ESTORIA 09 - LEITURA DE MULTIPLOS ARQUIVOS
+--------------------------------------------------------------------
+Como analista regional,
+quero processar varios arquivos diarios de ponto em uma unica execucao,
+para simplificar a operacao.
+
+Conceitos alvo:
+- MultiResourceItemReader
+- Padrao de arquivo (working_hours_*.csv)
+
+Criterios de aceite:
+- Job processa todos os arquivos que batem no padrao informado.
+- Ordem de leitura previsivel e logada.
+- Arquivo vazio nao quebra o processamento dos demais.
+
+--------------------------------------------------------------------
+ESTORIA 10 - PROCESSAMENTO PARALELO
+--------------------------------------------------------------------
+Como gestor de infraestrutura,
+quero dividir o processamento em particoes,
+para reduzir o tempo total da janela batch.
+
+Conceitos alvo:
+- Partitioning ou Split Flow
+- TaskExecutor
+- Escalabilidade horizontal/logica
+
+Criterios de aceite:
+- Processamento dividido por departamento ou faixa de datas.
+- Logs mostram execucao paralela por particao.
+- Resultado final e igual ao processamento sequencial.
+
+--------------------------------------------------------------------
+ESTORIA 11 - DISPARO VIA API E AGENDAMENTO
+--------------------------------------------------------------------
+Como usuario interno,
+quero iniciar o job por API e tambem por agendamento,
+para operar sob demanda e no horario noturno.
+
+Conceitos alvo:
+- JobLauncher
+- Endpoint REST para start/status
+- @Scheduled
+
+Criterios de aceite:
+- Endpoint inicia execucao com parametros.
+- Endpoint consulta status por executionId.
+- Agendamento roda em horario configuravel.
+- Protecao contra concorrencia do mesmo job/parametros.
+
+--------------------------------------------------------------------
+ESTORIA 12 - TESTES DE BATCH E OBSERVABILIDADE
+--------------------------------------------------------------------
+Como lider tecnico,
+quero testes automatizados e metricas de execucao,
+para garantir confiabilidade e evolucao segura.
+
+Conceitos alvo:
+- spring-batch-test (JobLauncherTestUtils)
+- Testes de sucesso/falha/restart
+- Micrometer + Actuator (metricas de job/step)
+
+Criterios de aceite:
+- Teste cobre caminho feliz da importacao.
+- Teste cobre skip/retry e restart.
+- Endpoint de metricas exposto com contadores de leitura/escrita/falha.
+
+--------------------------------------------------------------------
+ORDEM SUGERIDA DE IMPLEMENTACAO
+--------------------------------------------------------------------
+1) Estorias 01 e 02
+2) Estorias 03 e 04
+3) Estorias 05 e 06
+4) Estorias 07 e 08
+5) Estorias 09 e 10
+6) Estorias 11 e 12
+
+Dica:
+A cada estoria concluida, crie um commit pequeno com mensagem objetiva.
+Exemplo: "feat(batch): adiciona skip e retry no step de horas".
+

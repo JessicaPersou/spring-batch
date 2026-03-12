@@ -22,7 +22,7 @@ public class CalculationWorkedHoursStepConfig {
                                                     ItemWriter<WorkingHours> itemWriter) {
 
         return new StepBuilder("calculationWorkedHours", jobRepository)
-            .<WorkingHours, WorkingHours>chunk(2, platformTransactionManager)
+            .<WorkingHours, WorkingHours>chunk(1000, platformTransactionManager)
             .reader(itemReader)
             .processor(itemProcessor)
             .writer(itemWriter)

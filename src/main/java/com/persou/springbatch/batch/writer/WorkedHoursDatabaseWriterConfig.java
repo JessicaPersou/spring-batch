@@ -13,8 +13,8 @@ public class WorkedHoursDatabaseWriterConfig {
     @Bean
     public ItemWriter<WorkingHours> workingHoursDatabaseWriter(DataSource dataSource) {
         return new JdbcBatchItemWriterBuilder<WorkingHours>().dataSource(dataSource).sql(
-                "INSERT INTO working_hours (employee_code, work_date, clock_in_time, clock_out_time, hours_worked) " +
-                    "VALUES (:employeeCode, :workDate, :clockInTime, :clockOutTime, :hoursWorked)")
+                "INSERT INTO working_hours (employee_code, work_date, clock_in_time, clock_out_time, hours_worked, lunch_break_start, lunch_break_end, lunch_break_time) " +
+                    "VALUES (:employeeCode, :workDate, :clockInTime, :clockOutTime, :hoursWorked, :lunchBreakStart, :lunchBreakEnd, :lunchBreakTime)")
             .beanMapped().build();
     }
 }
