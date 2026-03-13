@@ -1,8 +1,5 @@
 package com.persou.springbatch.dto;
 
-
-import java.math.BigDecimal;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
@@ -18,20 +15,20 @@ public class WorkingHours {
 
     private LocalTime clockOutTime;
 
-    private BigDecimal hoursWorked;
+    private LocalTime hoursWorked;
 
     private LocalTime lunchBreakStart;
 
     private LocalTime lunchBreakEnd;
 
-    private BigDecimal lunchBreakTime;
+    private LocalTime lunchBreakTime;
 
     public WorkingHours() {
     }
 
     public WorkingHours(Long id, String employeeCode, LocalDate workDate, LocalTime clockInTime, LocalTime clockOutTime,
-                        BigDecimal hoursWorked, LocalTime lunchBreakStart, LocalTime lunchBreakEnd,
-                        BigDecimal lunchBreakTime) {
+                        LocalTime hoursWorked, LocalTime lunchBreakStart, LocalTime lunchBreakEnd,
+                        LocalTime lunchBreakTime) {
         this.id = id;
         this.employeeCode = employeeCode;
         this.workDate = workDate;
@@ -83,11 +80,11 @@ public class WorkingHours {
         this.clockOutTime = clockOutTime;
     }
 
-    public BigDecimal getHoursWorked() {
+    public LocalTime getHoursWorked() {
         return hoursWorked;
     }
 
-    public void setHoursWorked(BigDecimal hoursWorked) {
+    public void setHoursWorked(LocalTime hoursWorked) {
         this.hoursWorked = hoursWorked;
     }
 
@@ -107,11 +104,11 @@ public class WorkingHours {
         this.lunchBreakEnd = lunchBreakEnd;
     }
 
-    public void setLunchBreakTime(BigDecimal lunchBreakTime) {
+    public void setLunchBreakTime(LocalTime lunchBreakTime) {
         this.lunchBreakTime = lunchBreakTime;
     }
 
-    public BigDecimal getLunchBreakTime() {
+    public LocalTime getLunchBreakTime() {
         return lunchBreakTime;
     }
 
